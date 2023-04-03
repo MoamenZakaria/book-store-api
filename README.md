@@ -26,17 +26,23 @@
 <img src="https://img.shields.io/badge/docker%20-%230db7ed.svg?&style=for-the-badge&logo=docker&logoColor=white"/>
 </a>
 
-
+   <a href="#" target="_blank">
+<img src="https://img.shields.io/badge/Red%20Hat%20Open%20Shift-E00?logo=redhatopenshift&logoColor=fff&style=for-the-badge&logoColor=white"/>
+</a>
 </p>
 
 # Sample Book Store Management API Demo 📚
 
 This API enables users to manage books (CRUD), update books details, and checkout order with ability to apply promotions
 on the applicable items.
+## 🚀 Live API Demo @OpenShift
+- **Health Check** : http://book-store-route-due2023-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/book-store-service/actuator/health
+- **Docs** : http://book-store-route-due2023-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/book-store-service/swagger-ui.html
+- **ListBook API** : http://book-store-route-due2023-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/book-store-service/v1/books?page=1&size5
 
 ## ✨ Features
 
-- Books Managment
+- Books Management
 - Order Checkout
 - Promo Code Redemption
 
@@ -46,6 +52,7 @@ Book Store API uses a number of open source projects to work properly:
 
 * OpenJDK 17
 * [Spring Boot 3](https://spring.io)
+* Redhat OpenShift
 * Docker 🐳
 * Docker-compose 🐳
 * Gradle

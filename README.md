@@ -59,6 +59,12 @@ Book Store API uses a number of open source projects to work properly:
 * H2 In-Mem DB (MySQL Mode)
 * Flyway (schema & test data seeding)
 
+# 🧾 TO-DO Checklist
+- [x] Books CRUD Operation 
+- [x] Checkout API with promo code support based on book type
+- [x] Docker / Docker compose support & Onboard the app on OpenShift 
+- [ ] Use JWT for APIs security
+
 # 🧪 Testing
 
 ### Using Gradle

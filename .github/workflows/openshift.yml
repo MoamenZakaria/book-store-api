@@ -46,7 +46,7 @@ env:
   # 🖊️ EDIT to change the image registry settings.
   # Registries such as GHCR, Quay.io, and Docker Hub are supported.
   IMAGE_REGISTRY: quay.io/due2023/main
-  IMAGE_REGISTRY_USER: due2023
+  IMAGE_REGISTRY_USER: due2023+oc_user
   IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
 
   # 🖊️ EDIT to specify custom tags for the container image, or default tags will be generated below.

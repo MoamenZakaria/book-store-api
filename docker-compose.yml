@@ -1,0 +1,13 @@
+version: '3'
+services:
+  book-store-api-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '9999:9999'
+    restart: always
+    networks:
+      - backend
+networks:
+  backend:

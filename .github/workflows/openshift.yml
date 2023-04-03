@@ -36,12 +36,12 @@ env:
   OPENSHIFT_NAMESPACE: ""
 
   # 🖊️ EDIT to set a name for your OpenShift app, or a default one will be generated below.
-  APP_NAME: ""
+  APP_NAME: "book-store-api-oc"
 
   # 🖊️ EDIT with the port your application should be accessible on.
   # If the container image exposes *exactly one* port, this can be left blank.
   # Refer to the 'port' input of https://github.com/redhat-actions/oc-new-app
-  APP_PORT: ""
+  APP_PORT: "9999"
 
   # 🖊️ EDIT to change the image registry settings.
   # Registries such as GHCR, Quay.io, and Docker Hub are supported.
@@ -66,12 +66,6 @@ jobs:
   #
   # TODO: Make sure to add 'CRDA Scan' starter workflow from the 'Actions' tab.
   # For guide on adding new starter workflow visit https://docs.github.com/en/github-ae@latest/actions/using-workflows/using-starter-workflows
-
-  crda-scan:
-    uses: ./.github/workflows/crda.yml
-    secrets:
-      CRDA_KEY: ${{ secrets.CRDA_KEY }}
-      # SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}       # Either use SNYK_TOKEN or CRDA_KEY
 
   openshift-ci-cd:
     # 🖊️ Uncomment this if you are using CRDA scan step above

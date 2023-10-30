@@ -22,8 +22,7 @@ jobs:
 
     - name: Append Version Task to Gradle File
       run: |
-        UNIQUE_ID=$(uuidgen)
-        TASK_NAME="printVersion_${UNIQUE_ID}"
+        TASK_NAME="printVersionGH"
         echo -e "task ${TASK_NAME} {\n    doLast {\n        println project.version\n    }\n}" >> build.gradle
 
     - name: Get Version from Gradle

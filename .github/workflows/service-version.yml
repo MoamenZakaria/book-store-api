@@ -1,7 +1,9 @@
 name : Get App Version
-run-name: ${{ github.env.version }}
+run-name: version $VERSION
 on :
-  workflow_dispatch:
+  push: 
+    branches: 
+      - main
 
 jobs:
   build:
@@ -27,6 +29,5 @@ jobs:
         echo -e "task printVersionGH {\n    doLast {\n        println project.version\n    }\n}" >> build.gradle
         VERSION=$(gradle -q printVersionGH)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
-        echo "**Service Version:** `$VERSION` 🚀" >> $GITHUB_STEP_SUMMARY
-        echo "::set-output name=version::$VERSION"
+        echo "**Service Version:** $VERSION 🚀" >> $GITHUB_STEP_SUMMARY
 

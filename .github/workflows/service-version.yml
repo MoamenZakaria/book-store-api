@@ -21,16 +21,16 @@ jobs:
       uses: gradle/gradle-build-action@v2.9.0
     - name: Run build with Gradle Wrapper
       run: gradle build test
-    - name: Set version number
+
+    - name: Append Version Task to Gradle File
       run: |
-        python - <<END
-        with open("build.gradle", "r") as f:
-            lines = f.readlines()
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith("version '"):
-                version = stripped.split("'")[1]
-                print(f"Found version: {version}")
-                print(f"::set-env name=VERSION::{version}")
-                break
-        END
+        echo -e "task printVersion {\n    doLast {\n        println project.version\n    }\n}" >> build.gradle
+
+    - name: Get Version from Gradle
+      run: |
+        VERSION=$(./gradlew -q printVersion)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Use the Version
+      run: |
+        echo "Service Version is $VERSION 🚀" >> $GITHUB_STEP_SUMMARY

@@ -22,12 +22,11 @@ jobs:
 
     - name: Append Version Task to Gradle File
       run: |
-        TASK_NAME="printVersionGH"
-        echo -e "task ${TASK_NAME} {\n    doLast {\n        println project.version\n    }\n}" >> build.gradle
+        echo -e "task printVersionGH {\n    doLast {\n        println project.version\n    }\n}" >> build.gradle
 
     - name: Get Version from Gradle
       run: |
-        VERSION=$(gradle -q ${TASK_NAME})
+        VERSION=$(gradle -q printVersionGH)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Use the Version

@@ -23,5 +23,14 @@ jobs:
       run: gradle build test
     - name: Set version number
       run: |
-        VERSION=$(cat build.gradle | grep version | cut -d '"' -f 2)
-        echo "Version number is $VERSION"
+        python - <<END
+        with open("build.gradle", "r") as f:
+            lines = f.readlines()
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith("version '"):
+                version = stripped.split("'")[1]
+                print(f"Found version: {version}")
+                print(f"::set-env name=VERSION::{version}")
+                break
+        END

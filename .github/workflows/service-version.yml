@@ -1,0 +1,21 @@
+name : Print Service Version
+
+on :
+  workflow_dispatch:
+
+jobs:
+  build:
+    # 🖊️ Uncomment this if you are using CRDA scan step above
+    # needs: crda-scan
+    name: Build 
+    runs-on: ubuntu-20.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3.13.0
+      with: 
+        java-version: 17
+    - name: Gradle Build Action
+      uses: gradle/gradle-build-action@v2.9.0
+

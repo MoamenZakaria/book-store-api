@@ -21,3 +21,7 @@ jobs:
       uses: gradle/gradle-build-action@v2.9.0
     - name: Run build with Gradle Wrapper
       run: gradle build test
+    - name: Set version number
+      run: |
+        VERSION=$(cat build.gradle | grep versionName | cut -d '"' -f 2)
+        echo "Version number is $VERSION"

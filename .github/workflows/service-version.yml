@@ -5,8 +5,6 @@ on :
 
 jobs:
   build:
-    # 🖊️ Uncomment this if you are using CRDA scan step above
-    # needs: crda-scan
     name: Build 
     runs-on: ubuntu-20.04
     steps:
@@ -28,7 +26,7 @@ jobs:
 
     - name: Get Version from Gradle
       run: |
-        VERSION=$(./gradlew -q printVersion)
+        VERSION=$(gradle -q printVersion)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Use the Version

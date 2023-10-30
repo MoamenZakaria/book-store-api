@@ -1,5 +1,5 @@
-name : Print Service Version
-
+name : Version ${{needs.}}
+run-name: ${{ steps.get_version.outputs.version }}
 on :
   workflow_dispatch:
 
@@ -22,8 +22,11 @@ jobs:
         generate-job-summary: false
       
     - name: Get Version from Gradle
+      id: get_version
       run: |
         echo -e "task printVersionGH {\n    doLast {\n        println project.version\n    }\n}" >> build.gradle
         VERSION=$(gradle -q printVersionGH)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
         echo "**Service Version:** `$VERSION` 🚀" >> $GITHUB_STEP_SUMMARY
+        echo "::set-output name=version::$VERSION"
+

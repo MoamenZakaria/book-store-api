@@ -1,5 +1,5 @@
 name : Get App Version
-run-name: ${{ steps.get_version.outputs.version }}
+run-name: ${{ github.env.version }}
 on :
   workflow_dispatch:
 

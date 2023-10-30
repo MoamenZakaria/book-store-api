@@ -23,5 +23,5 @@ jobs:
       run: gradle build test
     - name: Set version number
       run: |
-        VERSION=$(cat build.gradle | grep versionName | cut -d '"' -f 2)
+        VERSION=$(cat build.gradle | grep version | cut -d '"' -f 2)
         echo "Version number is $VERSION"

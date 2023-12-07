@@ -14,39 +14,32 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for all tags and branches
 
-      - name: Generate and commit changelog
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { execSync } = require('child_process');
+      - name: Generate changelog entry
+        run: |
+          # Fetch all tags
+          git fetch --tags
+          
+          # Get the latest tag
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $latest_tag"
 
-            // Configure Git
-            execSync(`git config user.name "github-actions"`);
-            execSync(`git config user.email "github-actions@github.com"`);
+          # Get commits since the latest tag
+          commits=$(git log ${latest_tag}..HEAD --pretty=format:"- %s")
+          if [ -z "$commits" ]; then
+            echo "No new commits since last tag."
+            exit 0
+          fi
 
-            // Get the latest tag
-            const latestTag = execSync("git describe --tags --abbrev=0").toString().trim();
+          # Prepare changelog content
+          changelog_content="## Changes since $latest_tag\n\n$commits\n\n"
 
-            // Get commits since the latest tag
-            const commits = execSync(`git log ${latestTag}..HEAD --pretty=format:"- %s (%h)"`).toString().trim();
+          # Update the changelog file
+          echo "$changelog_content" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
 
-            if (!commits) {
-              console.log("No new commits since the last tag.");
-              return;
-            }
-
-            console.log("New commits since last tag:", commits);
-
-            // Append new commits to the changelog
-            const fs = require('fs');
-            const changelogPath = 'CHANGELOG.md';
-            let changelogContent = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, 'utf8') : '';
-            changelogContent = `## Changes since ${latestTag}\n\n${commits}\n\n` + changelogContent;
-            fs.writeFileSync(changelogPath, changelogContent);
-
-            // Commit and push the changelog
-            execSync(`git add ${changelogPath}`);
-            const commitMessage = `Update changelog for ${latestTag}`;
-            execSync(`git commit -m "${commitMessage}"`);
-            execSync(`git push`);
-          result-encoding: utf8
+      - name: Commit and push changelog
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "Update changelog for $latest_tag"
+          git push

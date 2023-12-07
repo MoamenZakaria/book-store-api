@@ -16,17 +16,22 @@ jobs:
 
       - name: Generate changelog entry
         run: |
-          # Fetch all tags
-          git fetch --tags
-          
-          # Get the latest tag
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "Latest tag: $latest_tag"
+          # Check if there are any tags
+          if git rev-list --tags --max-count=1; then
+            # Get the latest tag
+            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            echo "Latest tag: $latest_tag"
 
-          # Get commits since the latest tag
-          commits=$(git log ${latest_tag}..HEAD --pretty=format:"- %s")
+            # Get commits since the latest tag
+            commits=$(git log ${latest_tag}..HEAD --pretty=format:"- %s")
+          else
+            echo "No tags found. Using all commits."
+            latest_tag="beginning"
+            commits=$(git log --pretty=format:"- %s")
+          fi
+
           if [ -z "$commits" ]; then
-            echo "No new commits since last tag."
+            echo "No new commits."
             exit 0
           fi
 

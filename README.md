@@ -197,6 +197,7 @@ Once the Application is up and running started you can check Swagger docs using 
 
 ```sh
  http://127.0.0.1:9999/book-store-service/swagger-ui.html
+
 ```
 
 ## Author

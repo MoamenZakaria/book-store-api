@@ -18,17 +18,17 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const exec = require('child_process').execSync;
+            const { execSync } = require('child_process');
 
             // Configure Git
-            exec(`git config user.name "github-actions"`);
-            exec(`git config user.email "github-actions@github.com"`);
+            execSync(`git config user.name "github-actions"`);
+            execSync(`git config user.email "github-actions@github.com"`);
 
             // Get the latest tag
-            const latestTag = exec("git describe --tags --abbrev=0").toString().trim();
+            const latestTag = execSync("git describe --tags --abbrev=0").toString().trim();
 
             // Get commits since the latest tag
-            const commits = exec(`git log ${latestTag}..HEAD --pretty=format:"- %s (%h)"`).toString().trim();
+            const commits = execSync(`git log ${latestTag}..HEAD --pretty=format:"- %s (%h)"`).toString().trim();
 
             if (!commits) {
               console.log("No new commits since the last tag.");
@@ -45,8 +45,8 @@ jobs:
             fs.writeFileSync(changelogPath, changelogContent);
 
             // Commit and push the changelog
-            exec(`git add ${changelogPath}`);
+            execSync(`git add ${changelogPath}`);
             const commitMessage = `Update changelog for ${latestTag}`;
-            exec(`git commit -m "${commitMessage}"`);
-            exec(`git push`);
+            execSync(`git commit -m "${commitMessage}"`);
+            execSync(`git push`);
           result-encoding: utf8

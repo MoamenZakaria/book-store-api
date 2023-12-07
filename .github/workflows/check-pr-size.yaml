@@ -1,0 +1,56 @@
+name: PR Size Labeling with GitHub Script
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Label PR based on size
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr_number = context.issue.number;
+            const repo = context.repo;
+
+            // Fetch PR data
+            const { data: prData } = await github.rest.pulls.get({
+              owner: repo.owner,
+              repo: repo.repo,
+              pull_number: pr_number,
+            });
+
+            const additions = prData.additions;
+            const deletions = prData.deletions;
+            const total_changes = additions + deletions;
+
+            // Define size thresholds
+            const SIZE_XS = 10;
+            const SIZE_S = 30;
+            const SIZE_M = 100;
+            const SIZE_L = 500;
+            const SIZE_XL = 1000;
+
+            let label = "";
+
+            // Determine the size label
+            if (total_changes <= SIZE_XS) label = "XS";
+            else if (total_changes <= SIZE_S) label = "S";
+            else if (total_changes <= SIZE_M) label = "M";
+            else if (total_changes <= SIZE_L) label = "L";
+            else if (total_changes > SIZE_L) label = "XL";
+
+            // Apply the label
+            if (label) {
+              await github.rest.issues.addLabels({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: pr_number,
+                labels: [label],
+              });
+            }

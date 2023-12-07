@@ -1,0 +1,52 @@
+name: Automated Changelog Generation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history for all tags and branches
+
+      - name: Generate and commit changelog
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const exec = require('child_process').execSync;
+
+            // Configure Git
+            exec(`git config user.name "github-actions"`);
+            exec(`git config user.email "github-actions@github.com"`);
+
+            // Get the latest tag
+            const latestTag = exec("git describe --tags --abbrev=0").toString().trim();
+
+            // Get commits since the latest tag
+            const commits = exec(`git log ${latestTag}..HEAD --pretty=format:"- %s (%h)"`).toString().trim();
+
+            if (!commits) {
+              console.log("No new commits since the last tag.");
+              return;
+            }
+
+            console.log("New commits since last tag:", commits);
+
+            // Append new commits to the changelog
+            const fs = require('fs');
+            const changelogPath = 'CHANGELOG.md';
+            let changelogContent = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, 'utf8') : '';
+            changelogContent = `## Changes since ${latestTag}\n\n${commits}\n\n` + changelogContent;
+            fs.writeFileSync(changelogPath, changelogContent);
+
+            // Commit and push the changelog
+            exec(`git add ${changelogPath}`);
+            const commitMessage = `Update changelog for ${latestTag}`;
+            exec(`git commit -m "${commitMessage}"`);
+            exec(`git push`);
+          result-encoding: utf8

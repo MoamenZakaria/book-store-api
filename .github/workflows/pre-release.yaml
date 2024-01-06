@@ -41,6 +41,8 @@ jobs:
               --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
               --generate-notes \
               ${{ github.event.inputs.is_prerelease == 'true' && '--prerelease' || '' }}
+          echo "✅ Release for tag $tag created successfully." >> $GITHUB_STEP_SUMMARY
+
 
       - name: Update existing release
         if: env.RELEASE_EXISTS == 'true'
@@ -48,9 +50,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
-          echo "Release for tag $tag already exists. Updating release..."
-          gh release edit "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-              --prerelease ${{ github.event.inputs.is_prerelease == 'true' && 'true' || 'false' }}
+          echo "❌ Release for tag $tag already exists. Please create a new tag" >> $GITHUB_STEP_SUMMARY
 

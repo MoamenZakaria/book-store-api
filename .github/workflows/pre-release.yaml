@@ -1,0 +1,35 @@
+name: Create Pre-Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: 'Tag Name for the Pre-Release'    
+        required: true
+      releaseName:
+        description: 'Release Name'
+        required: true
+        default: 'Pre-Release'
+      isDraft:
+        description: 'Is Draft'
+        default: false
+
+jobs:
+  create_pre_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Add steps for any build or test processes you have here
+
+    - name: Create Pre-Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.inputs.tagName }}
+        release_name: ${{ github.event.inputs.releaseName }}
+        draft: false
+        prerelease: ${{ github.event.inputs.isDraft }}

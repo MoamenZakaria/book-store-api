@@ -25,14 +25,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
+          echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
           if gh release view "$tag" --repo="$GITHUB_REPOSITORY"; then
-            echo "::set-output name=exists::true"
-          else
-            echo "::set-output name=exists::false"
+            echo "RELEASE_EXISTS=true" >> $GITHUB_ENV
           fi
 
       - name: Create or Update release
-        if: steps.check_release.outputs.exists == 'false'
+        if: env.RELEASE_EXISTS == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
@@ -44,7 +43,7 @@ jobs:
               ${{ github.event.inputs.is_prerelease == 'true' && '--prerelease' || '' }}
 
       - name: Update existing release
-        if: steps.check_release.outputs.exists == 'true'
+        if: env.RELEASE_EXISTS == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
@@ -53,5 +52,5 @@ jobs:
           gh release edit "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-              --generate-notes \
-              ${{ github.event.inputs.is_prerelease == 'true' && '--prerelease' || '' }}
+              --prerelease ${{ github.event.inputs.is_prerelease == 'true' && 'true' || 'false' }}
+

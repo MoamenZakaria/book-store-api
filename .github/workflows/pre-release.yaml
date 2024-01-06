@@ -2,6 +2,11 @@ name: Create release
 
 on:
   workflow_dispatch:
+    inputs:
+      is_prerelease:
+        description: 'Mark as Pre-Release? (true/false)'
+        required: true
+        default: 'true'
   push:
     tags:
       - v*
@@ -23,4 +28,4 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
               --generate-notes \
-              --prerelease
+              ${{ github.event.inputs.is_prerelease == 'true' && '--prerelease' || '' }}

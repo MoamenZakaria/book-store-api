@@ -57,3 +57,4 @@ jobs:
           tag: ${{ github.ref_name }}
         run: |
           echo "❌ Release for tag $tag already exists. Please create a new tag" >> $GITHUB_STEP_SUMMARY
+          exit 1
